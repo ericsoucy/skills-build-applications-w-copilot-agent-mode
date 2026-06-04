@@ -1,24 +1,30 @@
+import cors from 'cors';
 import express from 'express';
-import mongoose from 'mongoose';
+import apiRoutes from './routes';
+import { API_URL, PORT } from './config';
 
 const app = express();
-const PORT = 8000;
-const MONGO_URI = 'mongodb://localhost:27017/octofit';
 
+app.use(cors({ origin: true, credentials: true }));
+app.options('*', cors({ origin: true, credentials: true }));
 app.use(express.json());
+app.use('/api', apiRoutes);
 
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
+app.get('/', (_req, res) => {
+  res.json({
+    message: 'Octofit Tracker backend is running',
+    health: '/health',
+    api: '/api',
+    info: '/api/info',
+  });
 });
 
-mongoose.connect(MONGO_URI)
-  .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Backend listening on http://localhost:${PORT}`);
-    });
-  })
-  .catch((error) => {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
-  });
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok', apiUrl: API_URL });
+});
+
+app.get('/api/info', (_req, res) => {
+  res.json({ apiUrl: API_URL, port: PORT, environment: process.env.NODE_ENV || 'development' });
+});
+
+export default app;
