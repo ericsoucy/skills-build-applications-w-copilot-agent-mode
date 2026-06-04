@@ -1,7 +1,6 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import apiRoutes from './routes';
-import { API_URL, MONGO_URI, PORT } from './config';
+import { API_URL, PORT } from './config';
 
 const app = express();
 
@@ -25,15 +24,4 @@ app.get('/api/info', (_req, res) => {
   res.json({ apiUrl: API_URL, port: PORT, environment: process.env.NODE_ENV || 'development' });
 });
 
-mongoose.connect(MONGO_URI)
-  .then(() => {
-    console.log('Connected to MongoDB');
-    console.log(`API URL: ${API_URL}`);
-    app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Backend listening on ${API_URL}`);
-    });
-  })
-  .catch((error) => {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
-  });
+export default app;
