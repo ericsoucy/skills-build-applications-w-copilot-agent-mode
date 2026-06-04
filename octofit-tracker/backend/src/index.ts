@@ -1,21 +1,27 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import apiRoutes from './routes';
+import { API_URL, MONGO_URI, PORT } from './config';
 
 const app = express();
-const PORT = 8000;
-const MONGO_URI = 'mongodb://localhost:27017/octofit';
 
 app.use(express.json());
+app.use('/api', apiRoutes);
 
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok', apiUrl: API_URL });
+});
+
+app.get('/api/info', (_req, res) => {
+  res.json({ apiUrl: API_URL, port: PORT, environment: process.env.NODE_ENV || 'development' });
 });
 
 mongoose.connect(MONGO_URI)
   .then(() => {
     console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Backend listening on http://localhost:${PORT}`);
+    console.log(`API URL: ${API_URL}`);
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Backend listening on ${API_URL}`);
     });
   })
   .catch((error) => {
