@@ -1,9 +1,12 @@
+import cors from 'cors';
 import express from 'express';
 import apiRoutes from './routes';
 import { API_URL, PORT } from './config';
 
 const app = express();
 
+app.use(cors({ origin: true, credentials: true }));
+app.options('*', cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use('/api', apiRoutes);
 

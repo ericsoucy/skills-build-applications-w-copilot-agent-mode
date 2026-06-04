@@ -11,6 +11,26 @@ Currently, two official plugins are available:
 
 The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
+## Environment configuration
+
+This frontend uses `VITE_CODESPACE_NAME` to build the Codespaces-aware backend API URL. When defined, the app will use:
+
+```text
+https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/[resource]
+```
+
+If `VITE_CODESPACE_NAME` is unset, the frontend safely falls back to:
+
+```text
+http://localhost:8000/api/[resource]
+```
+
+You can define the value in `.env.local` at the project root:
+
+```text
+VITE_CODESPACE_NAME=your-codespace-name
+```
+
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
