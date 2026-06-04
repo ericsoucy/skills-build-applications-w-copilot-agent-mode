@@ -8,6 +8,15 @@ const app = express();
 app.use(express.json());
 app.use('/api', apiRoutes);
 
+app.get('/', (_req, res) => {
+  res.json({
+    message: 'Octofit Tracker backend is running',
+    health: '/health',
+    api: '/api',
+    info: '/api/info',
+  });
+});
+
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', apiUrl: API_URL });
 });
